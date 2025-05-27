@@ -1,11 +1,14 @@
 import React, { useState, useMemo } from 'react';
-import { Search, Filter, MapPin, Mail, Globe, Users, Calendar, Sparkles } from 'lucide-react';
+import { Search, Filter, MapPin, Mail, Globe, Users, Calendar } from 'lucide-react';
 import { Input } from '@/components/ui/input';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { Pagination, PaginationContent, PaginationEllipsis, PaginationItem, PaginationLink, PaginationNext, PaginationPrevious } from '@/components/ui/pagination';
+import Navbar from '@/components/Navbar';
+import HeroCarousel from '@/components/HeroCarousel';
+import AddStartupModal from '@/components/AddStartupModal';
 
 interface Startup {
   id: number;
@@ -23,7 +26,7 @@ interface Startup {
   fundingStage: string;
 }
 
-const startups: Startup[] = [
+const initialStartups: Startup[] = [
   {
     id: 1,
     name: "FinFlow",
@@ -147,11 +150,13 @@ const startups: Startup[] = [
 ];
 
 const Index = () => {
+  const [startups, setStartups] = useState<Startup[]>(initialStartups);
   const [searchTerm, setSearchTerm] = useState('');
   const [selectedDomain, setSelectedDomain] = useState('all');
   const [selectedFunding, setSelectedFunding] = useState('all');
   const [selectedTag, setSelectedTag] = useState('');
   const [currentPage, setCurrentPage] = useState(1);
+  const [isAddModalOpen, setIsAddModalOpen] = useState(false);
   const itemsPerPage = 6;
 
   // Get unique domains and tags
@@ -172,7 +177,7 @@ const Index = () => {
 
       return matchesSearch && matchesDomain && matchesFunding && matchesTag;
     });
-  }, [searchTerm, selectedDomain, selectedFunding, selectedTag]);
+  }, [searchTerm, selectedDomain, selectedFunding, selectedTag, startups]);
 
   // Pagination calculations
   const totalPages = Math.ceil(filteredStartups.length / itemsPerPage);
@@ -191,6 +196,14 @@ const Index = () => {
     setSelectedFunding('all');
     setSelectedTag('');
     setCurrentPage(1);
+  };
+
+  const handleAddStartup = (newStartupData: Omit<Startup, 'id'>) => {
+    const newStartup = {
+      ...newStartupData,
+      id: Math.max(...startups.map(s => s.id)) + 1
+    };
+    setStartups(prev => [newStartup, ...prev]);
   };
 
   // Generate page numbers for pagination
@@ -231,108 +244,104 @@ const Index = () => {
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-slate-50 via-blue-50 to-indigo-100">
-      {/* Header */}
-      <div className="bg-white/80 backdrop-blur-sm shadow-lg border-b border-white/20">
-        <div className="max-w-7xl mx-auto px-4 py-12">
-          <div className="text-center mb-10">
-            <div className="flex items-center justify-center mb-6">
-              <Sparkles className="h-8 w-8 text-blue-600 mr-3" />
-              <h1 className="text-5xl font-bold bg-gradient-to-r from-blue-600 via-purple-600 to-indigo-600 bg-clip-text text-transparent">
-                Startup Repository
-              </h1>
-            </div>
-            <p className="text-xl text-gray-700 max-w-4xl mx-auto leading-relaxed">
-              Discover innovative startups across various domains. Connect with entrepreneurs, 
-              explore cutting-edge technologies, and find your next investment opportunity.
-            </p>
-          </div>
+      {/* Navigation */}
+      <Navbar onAddStartup={() => setIsAddModalOpen(true)} />
 
-          {/* Enhanced Search and Filters */}
-          <div className="bg-white/90 backdrop-blur-sm rounded-2xl p-8 shadow-xl border border-white/50 space-y-6">
-            <div className="flex flex-col lg:flex-row gap-6">
-              {/* Search */}
-              <div className="flex-1 relative group">
-                <Search className="absolute left-4 top-1/2 transform -translate-y-1/2 text-gray-400 h-5 w-5 group-focus-within:text-blue-500 transition-colors" />
-                <Input
-                  placeholder="Search startups, technologies, or descriptions..."
-                  value={searchTerm}
-                  onChange={(e) => setSearchTerm(e.target.value)}
-                  className="pl-12 h-14 text-lg border-2 border-gray-200 focus:border-blue-500 rounded-xl transition-all duration-200 shadow-sm"
-                />
-              </div>
+      {/* Hero Carousel */}
+      <HeroCarousel />
 
-              {/* Domain Filter */}
-              <Select value={selectedDomain} onValueChange={setSelectedDomain}>
-                <SelectTrigger className="w-full lg:w-56 h-14 border-2 border-gray-200 rounded-xl shadow-sm">
-                  <SelectValue placeholder="All Domains" />
-                </SelectTrigger>
-                <SelectContent className="bg-white/95 backdrop-blur-sm border border-gray-200 rounded-xl shadow-xl">
-                  <SelectItem value="all">All Domains</SelectItem>
-                  {domains.map(domain => (
-                    <SelectItem key={domain} value={domain}>{domain}</SelectItem>
-                  ))}
-                </SelectContent>
-              </Select>
+      {/* Main Content */}
+      <div className="max-w-7xl mx-auto px-4 py-12">
+        <div className="text-center mb-10">
+          <p className="text-xl text-gray-700 max-w-4xl mx-auto leading-relaxed">
+            Discover innovative startups across various domains. Connect with entrepreneurs, 
+            explore cutting-edge technologies, and find your next investment opportunity.
+          </p>
+        </div>
 
-              {/* Funding Stage Filter */}
-              <Select value={selectedFunding} onValueChange={setSelectedFunding}>
-                <SelectTrigger className="w-full lg:w-56 h-14 border-2 border-gray-200 rounded-xl shadow-sm">
-                  <SelectValue placeholder="All Funding Stages" />
-                </SelectTrigger>
-                <SelectContent className="bg-white/95 backdrop-blur-sm border border-gray-200 rounded-xl shadow-xl">
-                  <SelectItem value="all">All Stages</SelectItem>
-                  {fundingStages.map(stage => (
-                    <SelectItem key={stage} value={stage}>{stage}</SelectItem>
-                  ))}
-                </SelectContent>
-              </Select>
-
-              <Button 
-                variant="outline" 
-                onClick={clearFilters}
-                className="h-14 px-6 border-2 border-gray-200 hover:bg-gray-50 rounded-xl transition-all duration-200"
-              >
-                <Filter className="h-5 w-5 mr-2" />
-                Clear
-              </Button>
+        {/* Enhanced Search and Filters */}
+        <div className="bg-white/90 backdrop-blur-sm rounded-2xl p-8 shadow-xl border border-white/50 space-y-6">
+          <div className="flex flex-col lg:flex-row gap-6">
+            {/* Search */}
+            <div className="flex-1 relative group">
+              <Search className="absolute left-4 top-1/2 transform -translate-y-1/2 text-gray-400 h-5 w-5 group-focus-within:text-blue-500 transition-colors" />
+              <Input
+                placeholder="Search startups, technologies, or descriptions..."
+                value={searchTerm}
+                onChange={(e) => setSearchTerm(e.target.value)}
+                className="pl-12 h-14 text-lg border-2 border-gray-200 focus:border-blue-500 rounded-xl transition-all duration-200 shadow-sm"
+              />
             </div>
 
-            {/* Enhanced Tag Filter */}
-            <div className="space-y-4">
-              <div className="flex items-center gap-3">
-                <span className="text-sm font-semibold text-gray-700 bg-gray-100 px-3 py-2 rounded-lg">Filter by tags:</span>
-              </div>
-              <div className="flex flex-wrap gap-3">
-                {allTags.map(tag => (
-                  <Badge
-                    key={tag}
-                    variant={selectedTag === tag ? "default" : "secondary"}
-                    className={`cursor-pointer transition-all duration-200 px-4 py-2 text-sm font-medium rounded-full ${
-                      selectedTag === tag 
-                        ? "bg-blue-600 text-white shadow-lg scale-105" 
-                        : "bg-gray-100 text-gray-700 hover:bg-blue-100 hover:text-blue-700 hover:scale-105"
-                    }`}
-                    onClick={() => setSelectedTag(selectedTag === tag ? '' : tag)}
-                  >
-                    {tag}
-                  </Badge>
+            {/* Domain Filter */}
+            <Select value={selectedDomain} onValueChange={setSelectedDomain}>
+              <SelectTrigger className="w-full lg:w-56 h-14 border-2 border-gray-200 rounded-xl shadow-sm">
+                <SelectValue placeholder="All Domains" />
+              </SelectTrigger>
+              <SelectContent className="bg-white/95 backdrop-blur-sm border border-gray-200 rounded-xl shadow-xl">
+                <SelectItem value="all">All Domains</SelectItem>
+                {domains.map(domain => (
+                  <SelectItem key={domain} value={domain}>{domain}</SelectItem>
                 ))}
-              </div>
-            </div>
+              </SelectContent>
+            </Select>
+
+            {/* Funding Stage Filter */}
+            <Select value={selectedFunding} onValueChange={setSelectedFunding}>
+              <SelectTrigger className="w-full lg:w-56 h-14 border-2 border-gray-200 rounded-xl shadow-sm">
+                <SelectValue placeholder="All Funding Stages" />
+              </SelectTrigger>
+              <SelectContent className="bg-white/95 backdrop-blur-sm border border-gray-200 rounded-xl shadow-xl">
+                <SelectItem value="all">All Stages</SelectItem>
+                {fundingStages.map(stage => (
+                  <SelectItem key={stage} value={stage}>{stage}</SelectItem>
+                ))}
+              </SelectContent>
+            </Select>
+
+            <Button 
+              variant="outline" 
+              onClick={clearFilters}
+              className="h-14 px-6 border-2 border-gray-200 hover:bg-gray-50 rounded-xl transition-all duration-200"
+            >
+              <Filter className="h-5 w-5 mr-2" />
+              Clear
+            </Button>
           </div>
 
-          {/* Enhanced Results Count */}
-          <div className="mt-8 text-center">
-            <span className="inline-flex items-center px-4 py-2 bg-white/80 backdrop-blur-sm rounded-full text-gray-700 font-medium border border-white/50">
-              Showing {startIndex + 1}-{Math.min(endIndex, filteredStartups.length)} of {filteredStartups.length} startups
-            </span>
+          {/* Enhanced Tag Filter */}
+          <div className="space-y-4">
+            <div className="flex items-center gap-3">
+              <span className="text-sm font-semibold text-gray-700 bg-gray-100 px-3 py-2 rounded-lg">Filter by tags:</span>
+            </div>
+            <div className="flex flex-wrap gap-3">
+              {allTags.map(tag => (
+                <Badge
+                  key={tag}
+                  variant={selectedTag === tag ? "default" : "secondary"}
+                  className={`cursor-pointer transition-all duration-200 px-4 py-2 text-sm font-medium rounded-full ${
+                    selectedTag === tag 
+                      ? "bg-blue-600 text-white shadow-lg scale-105" 
+                      : "bg-gray-100 text-gray-700 hover:bg-blue-100 hover:text-blue-700 hover:scale-105"
+                  }`}
+                  onClick={() => setSelectedTag(selectedTag === tag ? '' : tag)}
+                >
+                  {tag}
+                </Badge>
+              ))}
+            </div>
           </div>
         </div>
-      </div>
 
-      {/* Enhanced Startups Grid */}
-      <div className="max-w-7xl mx-auto px-4 py-12">
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+        {/* Enhanced Results Count */}
+        <div className="mt-8 text-center">
+          <span className="inline-flex items-center px-4 py-2 bg-white/80 backdrop-blur-sm rounded-full text-gray-700 font-medium border border-white/50">
+            Showing {startIndex + 1}-{Math.min(endIndex, filteredStartups.length)} of {filteredStartups.length} startups
+          </span>
+        </div>
+
+        {/* Enhanced Startups Grid */}
+        <div className="mt-8 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
           {currentStartups.map(startup => (
             <Card key={startup.id} className="group hover:shadow-2xl transition-all duration-300 bg-white/90 backdrop-blur-sm border-0 shadow-lg hover:scale-105 rounded-xl overflow-hidden">
               <CardHeader className="pb-4 bg-gradient-to-br from-white to-gray-50 relative">
@@ -484,6 +493,13 @@ const Index = () => {
           </div>
         )}
       </div>
+
+      {/* Add Startup Modal */}
+      <AddStartupModal
+        isOpen={isAddModalOpen}
+        onClose={() => setIsAddModalOpen(false)}
+        onAddStartup={handleAddStartup}
+      />
     </div>
   );
 };
