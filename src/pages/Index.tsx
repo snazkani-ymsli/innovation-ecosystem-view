@@ -1,6 +1,6 @@
 
 import React, { useState, useMemo } from 'react';
-import { Search, Filter, MapPin, Mail, Globe, Users, Calendar } from 'lucide-react';
+import { Search, Filter, MapPin, Mail, Globe, Users, Calendar, Sparkles } from 'lucide-react';
 import { Input } from '@/components/ui/input';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
@@ -180,40 +180,43 @@ const Index = () => {
   };
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-slate-50 to-blue-50">
+    <div className="min-h-screen bg-gradient-to-br from-slate-50 via-blue-50 to-indigo-100">
       {/* Header */}
-      <div className="bg-white shadow-sm border-b">
-        <div className="max-w-7xl mx-auto px-4 py-8">
-          <div className="text-center mb-8">
-            <h1 className="text-4xl font-bold text-gray-900 mb-4">
-              Startup Repository
-            </h1>
-            <p className="text-xl text-gray-600 max-w-3xl mx-auto">
+      <div className="bg-white/80 backdrop-blur-sm shadow-lg border-b border-white/20">
+        <div className="max-w-7xl mx-auto px-4 py-12">
+          <div className="text-center mb-10">
+            <div className="flex items-center justify-center mb-6">
+              <Sparkles className="h-8 w-8 text-blue-600 mr-3" />
+              <h1 className="text-5xl font-bold bg-gradient-to-r from-blue-600 via-purple-600 to-indigo-600 bg-clip-text text-transparent">
+                Startup Repository
+              </h1>
+            </div>
+            <p className="text-xl text-gray-700 max-w-4xl mx-auto leading-relaxed">
               Discover innovative startups across various domains. Connect with entrepreneurs, 
               explore cutting-edge technologies, and find your next investment opportunity.
             </p>
           </div>
 
-          {/* Search and Filters */}
-          <div className="bg-gray-50 rounded-xl p-6 space-y-4">
-            <div className="flex flex-col lg:flex-row gap-4">
+          {/* Enhanced Search and Filters */}
+          <div className="bg-white/90 backdrop-blur-sm rounded-2xl p-8 shadow-xl border border-white/50 space-y-6">
+            <div className="flex flex-col lg:flex-row gap-6">
               {/* Search */}
-              <div className="flex-1 relative">
-                <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 h-4 w-4" />
+              <div className="flex-1 relative group">
+                <Search className="absolute left-4 top-1/2 transform -translate-y-1/2 text-gray-400 h-5 w-5 group-focus-within:text-blue-500 transition-colors" />
                 <Input
                   placeholder="Search startups, technologies, or descriptions..."
                   value={searchTerm}
                   onChange={(e) => setSearchTerm(e.target.value)}
-                  className="pl-10 h-12"
+                  className="pl-12 h-14 text-lg border-2 border-gray-200 focus:border-blue-500 rounded-xl transition-all duration-200 shadow-sm"
                 />
               </div>
 
               {/* Domain Filter */}
               <Select value={selectedDomain} onValueChange={setSelectedDomain}>
-                <SelectTrigger className="w-full lg:w-48 h-12">
+                <SelectTrigger className="w-full lg:w-56 h-14 border-2 border-gray-200 rounded-xl shadow-sm">
                   <SelectValue placeholder="All Domains" />
                 </SelectTrigger>
-                <SelectContent>
+                <SelectContent className="bg-white/95 backdrop-blur-sm border border-gray-200 rounded-xl shadow-xl">
                   <SelectItem value="all">All Domains</SelectItem>
                   {domains.map(domain => (
                     <SelectItem key={domain} value={domain}>{domain}</SelectItem>
@@ -223,10 +226,10 @@ const Index = () => {
 
               {/* Funding Stage Filter */}
               <Select value={selectedFunding} onValueChange={setSelectedFunding}>
-                <SelectTrigger className="w-full lg:w-48 h-12">
+                <SelectTrigger className="w-full lg:w-56 h-14 border-2 border-gray-200 rounded-xl shadow-sm">
                   <SelectValue placeholder="All Funding Stages" />
                 </SelectTrigger>
-                <SelectContent>
+                <SelectContent className="bg-white/95 backdrop-blur-sm border border-gray-200 rounded-xl shadow-xl">
                   <SelectItem value="all">All Stages</SelectItem>
                   {fundingStages.map(stage => (
                     <SelectItem key={stage} value={stage}>{stage}</SelectItem>
@@ -237,113 +240,126 @@ const Index = () => {
               <Button 
                 variant="outline" 
                 onClick={clearFilters}
-                className="h-12"
+                className="h-14 px-6 border-2 border-gray-200 hover:bg-gray-50 rounded-xl transition-all duration-200"
               >
-                <Filter className="h-4 w-4 mr-2" />
+                <Filter className="h-5 w-5 mr-2" />
                 Clear
               </Button>
             </div>
 
-            {/* Tag Filter */}
-            <div className="flex flex-wrap gap-2">
-              <span className="text-sm font-medium text-gray-700 py-2">Filter by tags:</span>
-              {allTags.map(tag => (
-                <Badge
-                  key={tag}
-                  variant={selectedTag === tag ? "default" : "secondary"}
-                  className="cursor-pointer hover:bg-blue-100 transition-colors"
-                  onClick={() => setSelectedTag(selectedTag === tag ? '' : tag)}
-                >
-                  {tag}
-                </Badge>
-              ))}
+            {/* Enhanced Tag Filter */}
+            <div className="space-y-4">
+              <div className="flex items-center gap-3">
+                <span className="text-sm font-semibold text-gray-700 bg-gray-100 px-3 py-2 rounded-lg">Filter by tags:</span>
+              </div>
+              <div className="flex flex-wrap gap-3">
+                {allTags.map(tag => (
+                  <Badge
+                    key={tag}
+                    variant={selectedTag === tag ? "default" : "secondary"}
+                    className={`cursor-pointer transition-all duration-200 px-4 py-2 text-sm font-medium rounded-full ${
+                      selectedTag === tag 
+                        ? "bg-blue-600 text-white shadow-lg scale-105" 
+                        : "bg-gray-100 text-gray-700 hover:bg-blue-100 hover:text-blue-700 hover:scale-105"
+                    }`}
+                    onClick={() => setSelectedTag(selectedTag === tag ? '' : tag)}
+                  >
+                    {tag}
+                  </Badge>
+                ))}
+              </div>
             </div>
           </div>
 
-          {/* Results Count */}
-          <div className="mt-6 text-gray-600">
-            Showing {filteredStartups.length} of {startups.length} startups
+          {/* Enhanced Results Count */}
+          <div className="mt-8 text-center">
+            <span className="inline-flex items-center px-4 py-2 bg-white/80 backdrop-blur-sm rounded-full text-gray-700 font-medium border border-white/50">
+              Showing {filteredStartups.length} of {startups.length} startups
+            </span>
           </div>
         </div>
       </div>
 
-      {/* Startups Grid */}
-      <div className="max-w-7xl mx-auto px-4 py-8">
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+      {/* Enhanced Startups Grid */}
+      <div className="max-w-7xl mx-auto px-4 py-12">
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
           {filteredStartups.map(startup => (
-            <Card key={startup.id} className="hover:shadow-lg transition-shadow duration-300 bg-white border-0 shadow-md">
-              <CardHeader className="pb-4">
-                <div className="flex items-start justify-between">
-                  <div className="flex items-center space-x-3">
-                    <div className="text-3xl">{startup.logo}</div>
+            <Card key={startup.id} className="group hover:shadow-2xl transition-all duration-300 bg-white/90 backdrop-blur-sm border-0 shadow-lg hover:scale-105 rounded-2xl overflow-hidden">
+              <CardHeader className="pb-6 bg-gradient-to-br from-white to-gray-50 relative">
+                <div className="absolute inset-0 bg-gradient-to-br from-blue-50/50 to-purple-50/50 opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
+                <div className="relative flex items-start justify-between">
+                  <div className="flex items-center space-x-4">
+                    <div className="text-4xl p-3 bg-white rounded-xl shadow-md group-hover:shadow-lg transition-shadow">
+                      {startup.logo}
+                    </div>
                     <div>
-                      <CardTitle className="text-xl font-bold text-gray-900">
+                      <CardTitle className="text-xl font-bold text-gray-900 group-hover:text-blue-700 transition-colors">
                         {startup.name}
                       </CardTitle>
-                      <Badge variant="outline" className="mt-1">
+                      <Badge variant="outline" className="mt-2 border-gray-300 text-gray-600">
                         {startup.domain}
                       </Badge>
                     </div>
                   </div>
-                  <Badge className="bg-green-100 text-green-800 hover:bg-green-100">
+                  <Badge className="bg-gradient-to-r from-green-500 to-emerald-500 text-white hover:from-green-600 hover:to-emerald-600 shadow-md">
                     {startup.fundingStage}
                   </Badge>
                 </div>
               </CardHeader>
 
-              <CardContent className="space-y-4">
-                <CardDescription className="text-gray-600 line-clamp-3">
+              <CardContent className="space-y-6 p-6">
+                <CardDescription className="text-gray-600 line-clamp-3 leading-relaxed">
                   {startup.description}
                 </CardDescription>
 
-                {/* Tags */}
-                <div className="flex flex-wrap gap-1">
+                {/* Enhanced Tags */}
+                <div className="flex flex-wrap gap-2">
                   {startup.tags.slice(0, 3).map(tag => (
-                    <Badge key={tag} variant="secondary" className="text-xs">
+                    <Badge key={tag} variant="secondary" className="text-xs bg-blue-50 text-blue-700 hover:bg-blue-100">
                       {tag}
                     </Badge>
                   ))}
                   {startup.tags.length > 3 && (
-                    <Badge variant="secondary" className="text-xs">
+                    <Badge variant="secondary" className="text-xs bg-gray-100 text-gray-600">
                       +{startup.tags.length - 3} more
                     </Badge>
                   )}
                 </div>
 
-                {/* Company Info */}
-                <div className="space-y-2 text-sm text-gray-600">
-                  <div className="flex items-center space-x-2">
-                    <MapPin className="h-4 w-4" />
+                {/* Enhanced Company Info */}
+                <div className="space-y-3 text-sm text-gray-600">
+                  <div className="flex items-center space-x-3 p-2 rounded-lg hover:bg-gray-50 transition-colors">
+                    <MapPin className="h-4 w-4 text-blue-500" />
                     <span>{startup.location}</span>
                   </div>
-                  <div className="flex items-center space-x-2">
-                    <Users className="h-4 w-4" />
+                  <div className="flex items-center space-x-3 p-2 rounded-lg hover:bg-gray-50 transition-colors">
+                    <Users className="h-4 w-4 text-green-500" />
                     <span>{startup.teamSize} employees</span>
                   </div>
-                  <div className="flex items-center space-x-2">
-                    <Calendar className="h-4 w-4" />
+                  <div className="flex items-center space-x-3 p-2 rounded-lg hover:bg-gray-50 transition-colors">
+                    <Calendar className="h-4 w-4 text-purple-500" />
                     <span>Founded {startup.founded}</span>
                   </div>
                 </div>
 
-                {/* Contact Info */}
-                <div className="flex space-x-2 pt-4 border-t">
+                {/* Enhanced Contact Info */}
+                <div className="flex space-x-3 pt-4 border-t border-gray-100">
                   <Button
                     variant="outline"
                     size="sm"
-                    className="flex-1"
+                    className="flex-1 bg-gradient-to-r from-blue-50 to-blue-100 border-blue-200 text-blue-700 hover:from-blue-100 hover:to-blue-200 transition-all duration-200"
                     onClick={() => window.open(`mailto:${startup.email}`)}
                   >
-                    <Mail className="h-4 w-4 mr-1" />
+                    <Mail className="h-4 w-4 mr-2" />
                     Email
                   </Button>
                   <Button
                     variant="outline"
                     size="sm"
-                    className="flex-1"
+                    className="flex-1 bg-gradient-to-r from-purple-50 to-purple-100 border-purple-200 text-purple-700 hover:from-purple-100 hover:to-purple-200 transition-all duration-200"
                     onClick={() => window.open(startup.website, '_blank')}
                   >
-                    <Globe className="h-4 w-4 mr-1" />
+                    <Globe className="h-4 w-4 mr-2" />
                     Website
                   </Button>
                 </div>
@@ -352,13 +368,18 @@ const Index = () => {
           ))}
         </div>
 
-        {/* No Results */}
+        {/* Enhanced No Results */}
         {filteredStartups.length === 0 && (
-          <div className="text-center py-12">
-            <div className="text-6xl mb-4">🔍</div>
-            <h3 className="text-xl font-semibold text-gray-900 mb-2">No startups found</h3>
-            <p className="text-gray-600 mb-4">Try adjusting your search criteria or filters</p>
-            <Button onClick={clearFilters}>Clear all filters</Button>
+          <div className="text-center py-16">
+            <div className="text-8xl mb-6 opacity-50">🔍</div>
+            <h3 className="text-2xl font-bold text-gray-900 mb-4">No startups found</h3>
+            <p className="text-gray-600 mb-8 text-lg">Try adjusting your search criteria or filters</p>
+            <Button 
+              onClick={clearFilters}
+              className="bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-700 hover:to-purple-700 text-white px-8 py-3 rounded-xl shadow-lg hover:shadow-xl transition-all duration-200"
+            >
+              Clear all filters
+            </Button>
           </div>
         )}
       </div>
