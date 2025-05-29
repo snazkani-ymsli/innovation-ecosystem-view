@@ -95,7 +95,7 @@ const AddStartupModal = ({ isOpen, onClose, onAddStartup }: AddStartupModalProps
         <div className="sticky top-0 bg-white border-b border-gray-200 p-6 rounded-t-2xl">
           <div className="flex items-center justify-between">
             <div className="flex items-center space-x-3">
-              <div className="p-2 bg-gradient-to-r from-blue-600 to-purple-600 rounded-lg">
+              <div className="p-2 bg-gradient-to-r from-red-600 to-blue-600 rounded-lg">
                 <Building2 className="h-6 w-6 text-white" />
               </div>
               <h2 className="text-2xl font-bold text-gray-900">Add New Startup</h2>
@@ -158,7 +158,7 @@ const AddStartupModal = ({ isOpen, onClose, onAddStartup }: AddStartupModalProps
               value={formData.description}
               onChange={(e) => setFormData(prev => ({ ...prev, description: e.target.value }))}
               placeholder="Detailed description"
-              className="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+              className="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-red-500 focus:border-red-500"
               rows={3}
             />
           </div>
@@ -296,7 +296,7 @@ const AddStartupModal = ({ isOpen, onClose, onAddStartup }: AddStartupModalProps
             </Button>
             <Button 
               type="submit" 
-              className="bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-700 hover:to-purple-700"
+              className="bg-gradient-to-r from-red-600 to-blue-600 hover:from-red-700 hover:to-blue-700"
             >
               Add Startup
             </Button>

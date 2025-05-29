@@ -243,7 +243,7 @@ const Index = () => {
   };
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-slate-50 via-blue-50 to-indigo-100">
+    <div className="min-h-screen bg-gradient-to-br from-slate-50 via-red-50 to-blue-100">
       {/* Navigation */}
       <Navbar onAddStartup={() => setIsAddModalOpen(true)} />
 
@@ -264,12 +264,12 @@ const Index = () => {
           <div className="flex flex-col lg:flex-row gap-6">
             {/* Search */}
             <div className="flex-1 relative group">
-              <Search className="absolute left-4 top-1/2 transform -translate-y-1/2 text-gray-400 h-5 w-5 group-focus-within:text-blue-500 transition-colors" />
+              <Search className="absolute left-4 top-1/2 transform -translate-y-1/2 text-gray-400 h-5 w-5 group-focus-within:text-red-500 transition-colors" />
               <Input
                 placeholder="Search startups, technologies, or descriptions..."
                 value={searchTerm}
                 onChange={(e) => setSearchTerm(e.target.value)}
-                className="pl-12 h-14 text-lg border-2 border-gray-200 focus:border-blue-500 rounded-xl transition-all duration-200 shadow-sm"
+                className="pl-12 h-14 text-lg border-2 border-gray-200 focus:border-red-500 rounded-xl transition-all duration-200 shadow-sm"
               />
             </div>
 
@@ -321,8 +321,8 @@ const Index = () => {
                   variant={selectedTag === tag ? "default" : "secondary"}
                   className={`cursor-pointer transition-all duration-200 px-4 py-2 text-sm font-medium rounded-full ${
                     selectedTag === tag 
-                      ? "bg-blue-600 text-white shadow-lg scale-105" 
-                      : "bg-gray-100 text-gray-700 hover:bg-blue-100 hover:text-blue-700 hover:scale-105"
+                      ? "bg-red-600 text-white shadow-lg scale-105"
+                      : "bg-gray-100 text-gray-700 hover:bg-red-100 hover:text-red-700 hover:scale-105"
                   }`}
                   onClick={() => setSelectedTag(selectedTag === tag ? '' : tag)}
                 >
@@ -345,14 +345,14 @@ const Index = () => {
           {currentStartups.map(startup => (
             <Card key={startup.id} className="group hover:shadow-2xl transition-all duration-300 bg-white/90 backdrop-blur-sm border-0 shadow-lg hover:scale-105 rounded-xl overflow-hidden">
               <CardHeader className="pb-4 bg-gradient-to-br from-white to-gray-50 relative">
-                <div className="absolute inset-0 bg-gradient-to-br from-blue-50/50 to-purple-50/50 opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
+                <div className="absolute inset-0 bg-gradient-to-br from-blue-50/50 to-red-50/50 opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
                 <div className="relative flex items-start justify-between">
                   <div className="flex items-center space-x-3">
                     <div className="text-3xl p-2 bg-white rounded-lg shadow-md group-hover:shadow-lg transition-shadow">
                       {startup.logo}
                     </div>
                     <div>
-                      <CardTitle className="text-lg font-bold text-gray-900 group-hover:text-blue-700 transition-colors">
+                      <CardTitle className="text-lg font-bold text-gray-900 group-hover:text-red-700 transition-colors">
                         {startup.name}
                       </CardTitle>
                       <Badge variant="outline" className="mt-1 text-xs border-gray-300 text-gray-600">
@@ -374,7 +374,7 @@ const Index = () => {
                 {/* Enhanced Tags */}
                 <div className="flex flex-wrap gap-1">
                   {startup.tags.slice(0, 3).map(tag => (
-                    <Badge key={tag} variant="secondary" className="text-xs bg-blue-50 text-blue-700 hover:bg-blue-100">
+                    <Badge key={tag} variant="secondary" className="text-xs bg-red-50 text-red-700 hover:bg-red-100">
                       {tag}
                     </Badge>
                   ))}
@@ -388,7 +388,7 @@ const Index = () => {
                 {/* Enhanced Company Info */}
                 <div className="space-y-2 text-xs text-gray-600">
                   <div className="flex items-center space-x-2 p-1 rounded-lg hover:bg-gray-50 transition-colors">
-                    <MapPin className="h-3 w-3 text-blue-500" />
+                    <MapPin className="h-3 w-3 text-red-500" />
                     <span>{startup.location}</span>
                   </div>
                   <div className="flex items-center space-x-2 p-1 rounded-lg hover:bg-gray-50 transition-colors">
@@ -396,7 +396,7 @@ const Index = () => {
                     <span>{startup.teamSize} employees</span>
                   </div>
                   <div className="flex items-center space-x-2 p-1 rounded-lg hover:bg-gray-50 transition-colors">
-                    <Calendar className="h-3 w-3 text-purple-500" />
+                    <Calendar className="h-3 w-3 text-blue-500" />
                     <span>Founded {startup.founded}</span>
                   </div>
                 </div>
@@ -406,7 +406,7 @@ const Index = () => {
                   <Button
                     variant="outline"
                     size="sm"
-                    className="flex-1 text-xs bg-gradient-to-r from-blue-50 to-blue-100 border-blue-200 text-blue-700 hover:from-blue-100 hover:to-blue-200 transition-all duration-200"
+                    className="flex-1 text-xs bg-gradient-to-r from-red-50 to-red-100 border-red-200 text-red-700 hover:from-red-100 hover:to-red-200 transition-all duration-200"
                     onClick={() => window.open(`mailto:${startup.email}`)}
                   >
                     <Mail className="h-3 w-3 mr-1" />
@@ -415,7 +415,7 @@ const Index = () => {
                   <Button
                     variant="outline"
                     size="sm"
-                    className="flex-1 text-xs bg-gradient-to-r from-purple-50 to-purple-100 border-purple-200 text-purple-700 hover:from-purple-100 hover:to-purple-200 transition-all duration-200"
+                    className="flex-1 text-xs bg-gradient-to-r from-blue-50 to-blue-100 border-blue-200 text-blue-700 hover:from-blue-100 hover:to-blue-200 transition-all duration-200"
                     onClick={() => window.open(startup.website, '_blank')}
                   >
                     <Globe className="h-3 w-3 mr-1" />
@@ -439,7 +439,7 @@ const Index = () => {
                       e.preventDefault();
                       if (currentPage > 1) setCurrentPage(currentPage - 1);
                     }}
-                    className={currentPage === 1 ? "pointer-events-none opacity-50" : "hover:bg-blue-50"}
+                    className={currentPage === 1 ? "pointer-events-none opacity-50" : "hover:bg-red-50"}
                   />
                 </PaginationItem>
                 
@@ -455,7 +455,7 @@ const Index = () => {
                           setCurrentPage(page as number);
                         }}
                         isActive={currentPage === page}
-                        className={currentPage === page ? "bg-blue-600 text-white" : "hover:bg-blue-50"}
+                        className={currentPage === page ? "bg-red-600 text-white" : "hover:bg-red-50"}
                       >
                         {page}
                       </PaginationLink>
@@ -470,7 +470,7 @@ const Index = () => {
                       e.preventDefault();
                       if (currentPage < totalPages) setCurrentPage(currentPage + 1);
                     }}
-                    className={currentPage === totalPages ? "pointer-events-none opacity-50" : "hover:bg-blue-50"}
+                    className={currentPage === totalPages ? "pointer-events-none opacity-50" : "hover:bg-red-50"}
                   />
                 </PaginationItem>
               </PaginationContent>
@@ -486,7 +486,7 @@ const Index = () => {
             <p className="text-gray-600 mb-8 text-lg">Try adjusting your search criteria or filters</p>
             <Button 
               onClick={clearFilters}
-              className="bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-700 hover:to-purple-700 text-white px-8 py-3 rounded-xl shadow-lg hover:shadow-xl transition-all duration-200"
+              className="bg-gradient-to-r from-red-600 to-blue-600 hover:from-red-700 hover:to-blue-700 text-white px-8 py-3 rounded-xl shadow-lg hover:shadow-xl transition-all duration-200"
             >
               Clear all filters
             </Button>
