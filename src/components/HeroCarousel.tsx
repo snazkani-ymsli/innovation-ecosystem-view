@@ -6,10 +6,12 @@ import {
   CarouselItem,
   CarouselNext,
   CarouselPrevious,
+  type CarouselApi,
 } from "@/components/ui/carousel";
 import { Badge } from '@/components/ui/badge';
 
 const HeroCarousel = () => {
+  const [api, setApi] = React.useState<CarouselApi | null>(null);
   const heroSlides = [
     {
       image: "https://images.unsplash.com/photo-1649972904349-6e44c42644a7?w=1200&h=600&fit=crop",
@@ -31,9 +33,25 @@ const HeroCarousel = () => {
     }
   ];
 
+  React.useEffect(() => {
+    if (!api) return;
+    const interval = setInterval(() => {
+      if (api.canScrollNext()) {
+        api.scrollNext();
+      } else {
+        api.scrollTo(0);
+      }
+    }, 4000);
+    return () => clearInterval(interval);
+  }, [api]);
+
   return (
     <div className="relative w-full max-w-7xl mx-auto h-96 overflow-hidden">
-      <Carousel className="w-full h-full" opts={{ align: "start", loop: true }}>
+      <Carousel
+        className="w-full h-full"
+        opts={{ align: "start", loop: true }}
+        setApi={setApi}
+      >
         <CarouselContent>
           {heroSlides.map((slide, index) => (
             <CarouselItem key={index} className="relative">
