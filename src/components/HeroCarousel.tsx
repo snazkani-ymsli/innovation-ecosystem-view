@@ -32,7 +32,7 @@ const HeroCarousel = () => {
   ];
 
   return (
-    <div className="relative w-full h-96 overflow-hidden">
+    <div className="relative w-full max-w-7xl mx-auto h-96 overflow-hidden">
       <Carousel className="w-full h-full" opts={{ align: "start", loop: true }}>
         <CarouselContent>
           {heroSlides.map((slide, index) => (
